@@ -188,9 +188,17 @@ export function Sidebar({ open = false, onClose }: SidebarProps) {
             close button is hidden since the sidebar is always-visible. */}
         <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-border px-4">
           <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <MessageSquare className="h-4 w-4" />
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/dermalumus-logo.png"
+              alt={t("title")}
+              className="h-9 w-9 shrink-0 rounded-lg object-contain"
+              onError={(e) => {
+                // File not dropped into /public yet — hide the broken-image
+                // glyph and fall back to the wordmark beside it.
+                e.currentTarget.style.display = "none";
+              }}
+            />
             <span className="text-sm font-semibold text-foreground">
               {t("title")}
             </span>
@@ -292,6 +300,20 @@ export function Sidebar({ open = false, onClose }: SidebarProps) {
             })}
           </ul>
         </nav>
+
+        {/* Brand logo — sits in the gap between the nav and the user
+            section. Hidden entirely if the file isn't in /public yet. */}
+        <div className="flex shrink-0 items-center justify-center px-4 py-4">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/dermalumus-logo.png"
+            alt={t("title")}
+            className="h-24 w-24 object-contain"
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+            }}
+          />
+        </div>
 
         {/* User section */}
         <div className="shrink-0 border-t border-border p-3">
