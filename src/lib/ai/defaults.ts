@@ -13,7 +13,19 @@ import type { AiProvider } from './types'
 export const AI_PROVIDER_DEFAULT_MODEL: Record<AiProvider, string> = {
   openai: 'gpt-5.4-mini',
   anthropic: 'claude-haiku-4-5-20251001',
+  // Groq serves Kimi K2 free; also the right shape for OpenRouter's
+  // `moonshotai/kimi-k2:free`, DeepSeek, Together, a local Ollama, etc.
+  // Groq model IDs carry a date suffix and churn — check
+  // console.groq.com/docs/models if this 404s.
+  openai_compatible: 'moonshotai/kimi-k2-instruct-0905',
 }
+
+/**
+ * Default base URL pre-filled for the `openai_compatible` provider.
+ * Groq's free tier is the path of least resistance to a no-cost agent.
+ * Editable free text in the UI — any OpenAI-compatible host works.
+ */
+export const OPENAI_COMPATIBLE_DEFAULT_BASE_URL = 'https://api.groq.com/openai/v1'
 
 /**
  * Sentinel the model is instructed to emit (in auto-reply mode) when it

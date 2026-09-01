@@ -6,7 +6,7 @@
 // whether the account is on OpenAI or Anthropic.
 // ============================================================
 
-export type AiProvider = 'openai' | 'anthropic'
+export type AiProvider = 'openai' | 'anthropic' | 'openai_compatible'
 
 /**
  * Account AI setup, decrypted and ready to use. Produced by
@@ -17,6 +17,11 @@ export interface AiConfig {
   provider: AiProvider
   model: string
   apiKey: string
+  /** OpenAI-compatible endpoint root (scheme + host + base path, e.g.
+   *  `https://api.groq.com/openai/v1`). Only set — and required — when
+   *  `provider` is `openai_compatible`; null for the built-in providers
+   *  whose URLs are fixed in their adapters. */
+  baseUrl: string | null
   systemPrompt: string | null
   isActive: boolean
   autoReplyEnabled: boolean

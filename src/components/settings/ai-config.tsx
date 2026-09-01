@@ -26,7 +26,10 @@ import {
 } from '@/components/ui/select';
 import { SettingsPanelHead } from './settings-panel-head';
 import { AiKnowledgeCard } from './ai-knowledge';
-import { AI_PROVIDER_DEFAULT_MODEL } from '@/lib/ai/defaults';
+import {
+  AI_PROVIDER_DEFAULT_MODEL,
+  OPENAI_COMPATIBLE_DEFAULT_BASE_URL,
+} from '@/lib/ai/defaults';
 import type { AiProvider } from '@/lib/ai/types';
 import type { AccountMember } from '@/types';
 import { fetchAccountMembers, memberLabel } from '@/lib/account/members';
@@ -41,11 +44,13 @@ const HANDOFF_QUEUE = '__queue__';
 const PROVIDER_LABEL: Record<AiProvider, string> = {
   openai: 'OpenAI',
   anthropic: 'Anthropic (Claude)',
+  openai_compatible: 'OpenAI-compatible (Groq, OpenRouter, Kimi…)',
 };
 
 const KEY_PLACEHOLDER: Record<AiProvider, string> = {
   openai: 'sk-...',
   anthropic: 'sk-ant-...',
+  openai_compatible: 'gsk_... / sk-or-... / sk-...',
 };
 
 export function AiConfig() {
@@ -61,6 +66,8 @@ export function AiConfig() {
   const [configured, setConfigured] = useState(false);
   const [provider, setProvider] = useState<AiProvider>('openai');
   const [model, setModel] = useState(AI_PROVIDER_DEFAULT_MODEL.openai);
+  // Only meaningful for the `openai_compatible` provider; ignored otherwise.
+  const [baseUrl, setBaseUrl] = useState('');
   const [apiKey, setApiKey] = useState('');
   const [keyEdited, setKeyEdited] = useState(false);
   const [showKey, setShowKey] = useState(false);
@@ -95,6 +102,7 @@ export function AiConfig() {
         setConfigured(true);
         setProvider(data.provider);
         setModel(data.model);
+        setBaseUrl(data.base_url ?? '');
         setSystemPrompt(data.system_prompt ?? '');
         setIsActive(data.is_active);
         setAutoReplyEnabled(data.auto_reply_enabled);
@@ -131,8 +139,14 @@ export function AiConfig() {
     const isDefaultModel =
       model === AI_PROVIDER_DEFAULT_MODEL.openai ||
       model === AI_PROVIDER_DEFAULT_MODEL.anthropic ||
+      model === AI_PROVIDER_DEFAULT_MODEL.openai_compatible ||
       model.trim() === '';
     if (isDefaultModel) setModel(AI_PROVIDER_DEFAULT_MODEL[next]);
+    // Pre-fill a sane endpoint the first time they pick the custom
+    // provider; leave whatever they typed on subsequent switches.
+    if (next === 'openai_compatible' && !baseUrl.trim()) {
+      setBaseUrl(OPENAI_COMPATIBLE_DEFAULT_BASE_URL);
+    }
   };
 
   const keyPayload = () => (keyEdited ? apiKey.trim() : undefined);
@@ -144,6 +158,7 @@ export function AiConfig() {
   const buildBody = () => ({
     provider,
     model: model.trim(),
+    base_url: provider === 'openai_compatible' ? baseUrl.trim() : null,
     api_key: keyPayload(),
     embeddings_api_key: embeddingsKeyPayload(),
     system_prompt: systemPrompt.trim() || null,
@@ -162,6 +177,7 @@ export function AiConfig() {
         body: JSON.stringify({
           provider,
           model: model.trim(),
+          base_url: provider === 'openai_compatible' ? baseUrl.trim() : null,
           api_key: keyPayload(),
         }),
       });
@@ -178,6 +194,10 @@ export function AiConfig() {
   const handleSave = async () => {
     if (!model.trim()) {
       toast.error(t('missingModel'));
+      return;
+    }
+    if (provider === 'openai_compatible' && !baseUrl.trim()) {
+      toast.error(t('missingBaseUrl'));
       return;
     }
     if (!configured && !keyEdited) {
@@ -281,6 +301,9 @@ export function AiConfig() {
                     <SelectItem value="anthropic">
                       {PROVIDER_LABEL.anthropic}
                     </SelectItem>
+                    <SelectItem value="openai_compatible">
+                      {PROVIDER_LABEL.openai_compatible}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -296,6 +319,22 @@ export function AiConfig() {
                 />
               </div>
             </div>
+
+            {provider === 'openai_compatible' && (
+              <div className="space-y-2">
+                <Label htmlFor="ai-base-url">{t('baseUrl')}</Label>
+                <Input
+                  id="ai-base-url"
+                  value={baseUrl}
+                  onChange={(e) => setBaseUrl(e.target.value)}
+                  placeholder={OPENAI_COMPATIBLE_DEFAULT_BASE_URL}
+                  disabled={disabled}
+                  autoComplete="off"
+                  spellCheck={false}
+                />
+                <p className="text-xs text-muted-foreground">{t('baseUrlHint')}</p>
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="ai-key">{t('apiKey')}</Label>

@@ -6,6 +6,7 @@ function config(overrides: Partial<AiConfig> = {}): AiConfig {
   return {
     provider: 'openai',
     model: 'gpt-test',
+    baseUrl: null,
     apiKey: 'sk-test',
     systemPrompt: null,
     isActive: true,
@@ -190,5 +191,42 @@ describe('generateReply — Anthropic', () => {
     const body = JSON.parse(fetchMock.mock.calls[0][1].body)
     expect(body.messages[0].role).toBe('user')
     expect(body.messages).toHaveLength(1)
+  })
+})
+
+describe('generateReply — OpenAI-compatible', () => {
+  it('POSTs to <baseUrl>/chat/completions with the caller key', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      okResponse({
+        choices: [{ message: { content: 'oi!' } }],
+        usage: { prompt_tokens: 5, completion_tokens: 2, total_tokens: 7 },
+      }),
+    )
+    vi.stubGlobal('fetch', fetchMock)
+
+    const res = await generateReply({
+      config: config({
+        provider: 'openai_compatible',
+        baseUrl: 'https://api.groq.com/openai/v1',
+        model: 'moonshotai/kimi-k2-instruct',
+      }),
+      systemPrompt: 'sys',
+      messages: [{ role: 'user', content: 'Hi' }],
+    })
+
+    expect(res.text).toBe('oi!')
+    const [url, opts] = fetchMock.mock.calls[0]
+    expect(url).toBe('https://api.groq.com/openai/v1/chat/completions')
+    expect(opts.headers.Authorization).toBe('Bearer sk-test')
+  })
+
+  it('errors when no base URL is configured', async () => {
+    await expect(
+      generateReply({
+        config: config({ provider: 'openai_compatible', baseUrl: null }),
+        systemPrompt: 'sys',
+        messages: [{ role: 'user', content: 'Hi' }],
+      }),
+    ).rejects.toMatchObject({ code: 'missing_base_url' })
   })
 })

@@ -10,6 +10,10 @@ export interface ProviderArgs {
   systemPrompt: string
   messages: ChatMessage[]
   timeoutMs: number
+  /** Only consumed by the `openai_compatible` adapter — the endpoint
+   *  root to POST `/chat/completions` against. Ignored by the built-in
+   *  OpenAI / Anthropic adapters. */
+  baseUrl?: string | null
 }
 
 /**

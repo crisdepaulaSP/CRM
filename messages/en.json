@@ -1709,7 +1709,10 @@
       "saveSuccess": "AI assistant saved.",
       "saveFailed": "Failed to save.",
       "removeSuccess": "AI configuration removed.",
-      "removeFailed": "Failed to remove."
+      "removeFailed": "Failed to remove.",
+      "baseUrl": "Base URL",
+      "baseUrlHint": "The OpenAI-compatible endpoint root. Free options: Groq (https://api.groq.com/openai/v1) — serves Kimi K2 as moonshotai/kimi-k2-instruct-0905 (or llama-3.3-70b-versatile) at no cost; OpenRouter (https://openrouter.ai/api/v1) with model moonshotai/kimi-k2:free.",
+      "missingBaseUrl": "Enter the base URL for the OpenAI-compatible provider."
     },
     "aiKnowledge": {
       "loadFailed": "Failed to load knowledge base",

@@ -1661,7 +1661,7 @@
     },
     "aiConfig": {
       "title": "Configuração do agente",
-      "description": "Use sua própria chave da OpenAI ou Anthropic. O CRM DermaLumus acessa o provedor diretamente com sua chave — sem cobrança de IA por usuário, e seus dados continuam sob seu controle. Isso habilita respostas com IA na caixa de entrada, no bot de resposta automática e na área de testes.",
+      "description": "Use sua própria chave da OpenAI, Anthropic ou de qualquer provedor compatível com OpenAI (Groq, OpenRouter, Kimi…) — inclusive opções gratuitas. O CRM DermaLumus acessa o provedor diretamente com sua chave — sem cobrança de IA por usuário, e seus dados continuam sob seu controle. Isso habilita respostas com IA na caixa de entrada, no bot de resposta automática e na área de testes.",
       "adminOnlyConfig": "Somente administradores e proprietários podem alterar a configuração do AI.",
       "loadFailed": "Falha ao carregar a configuração do AI",
       "providerAndKey": "Provedor e chave",
@@ -1697,7 +1697,10 @@
       "saveSuccess": "Assistente de IA salvo.",
       "saveFailed": "Falha ao salvar.",
       "removeSuccess": "Configuração de IA removida.",
-      "removeFailed": "Falha ao remover."
+      "removeFailed": "Falha ao remover.",
+      "baseUrl": "URL base",
+      "baseUrlHint": "A raiz do endpoint compatível com OpenAI. Opções gratuitas: Groq (https://api.groq.com/openai/v1) — roda o Kimi K2 como moonshotai/kimi-k2-instruct-0905 sem custo; OpenRouter (https://openrouter.ai/api/v1) com o modelo moonshotai/kimi-k2:free.",
+      "missingBaseUrl": "Informe a URL base do provedor compatível com OpenAI."
     },
     "aiKnowledge": {
       "loadFailed": "Falha ao carregar a base de conhecimento",

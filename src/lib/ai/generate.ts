@@ -8,6 +8,7 @@ import {
 import { HANDOFF_SENTINEL, aiRequestTimeoutMs } from './defaults'
 import { generateOpenAi } from './providers/openai'
 import { generateAnthropic } from './providers/anthropic'
+import { generateOpenAiCompatible } from './providers/openai-compatible'
 
 export interface GenerateArgs {
   config: AiConfig
@@ -31,6 +32,7 @@ export async function generateReply(args: GenerateArgs): Promise<GenerateResult>
     systemPrompt,
     messages,
     timeoutMs,
+    baseUrl: config.baseUrl,
   }
 
   let result: { text: string; usage: AiUsage | null }
@@ -40,6 +42,9 @@ export async function generateReply(args: GenerateArgs): Promise<GenerateResult>
       break
     case 'anthropic':
       result = await generateAnthropic(providerArgs)
+      break
+    case 'openai_compatible':
+      result = await generateOpenAiCompatible(providerArgs)
       break
     default:
       throw new AiError(`Unsupported AI provider: ${config.provider}`, {

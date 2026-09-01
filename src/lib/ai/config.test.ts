@@ -21,6 +21,7 @@ function dbReturning(row: Record<string, unknown> | null): SupabaseClient {
 const ROW = {
   provider: 'openai',
   model: 'gpt-x',
+  base_url: null,
   api_key: 'enc-key',
   system_prompt: null,
   is_active: false,

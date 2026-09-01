@@ -1709,7 +1709,10 @@
       "saveSuccess": "AI 어시스턴트가 저장되었습니다.",
       "saveFailed": "저장하지 못했습니다.",
       "removeSuccess": "AI 설정이 제거되었습니다.",
-      "removeFailed": "제거하지 못했습니다."
+      "removeFailed": "제거하지 못했습니다.",
+      "baseUrl": "기본 URL",
+      "baseUrlHint": "OpenAI 호환 엔드포인트 루트입니다. 무료 옵션: Groq (https://api.groq.com/openai/v1) — Kimi K2를 moonshotai/kimi-k2-instruct-0905로 무료 제공; OpenRouter (https://openrouter.ai/api/v1), 모델 moonshotai/kimi-k2:free.",
+      "missingBaseUrl": "OpenAI 호환 제공자의 기본 URL을 입력하세요."
     },
     "aiKnowledge": {
       "loadFailed": "지식베이스를 불러오지 못했습니다",
