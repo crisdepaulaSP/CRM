@@ -55,6 +55,8 @@ export function ContactForm({
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [company, setCompany] = useState('');
+  const [birthDate, setBirthDate] = useState('');
+  const [procedureDetails, setProcedureDetails] = useState('');
   const [saving, setSaving] = useState(false);
 
   // Duplicate-phone detection for NEW contacts. `exact` (same digits)
@@ -76,6 +78,8 @@ export function ContactForm({
       setPhone(contact?.phone ?? '');
       setEmail(contact?.email ?? '');
       setCompany(contact?.company ?? '');
+      setBirthDate(contact?.birth_date ?? '');
+      setProcedureDetails(contact?.procedure_details ?? '');
       setSelectedTagIds(contactTags.map((ct) => ct.tag_id));
       setDupMatch(null);
       fetchTags();
@@ -157,6 +161,8 @@ export function ContactForm({
             phone: phone.trim(),
             email: email.trim() || null,
             company: company.trim() || null,
+            birth_date: birthDate || null,
+            procedure_details: procedureDetails.trim() || null,
             updated_at: new Date().toISOString(),
           })
           .eq('id', contactId);
@@ -171,6 +177,8 @@ export function ContactForm({
             phone: phone.trim(),
             email: email.trim() || null,
             company: company.trim() || null,
+            birth_date: birthDate || null,
+            procedure_details: procedureDetails.trim() || null,
           })
           .select('id')
           .single();
@@ -319,6 +327,33 @@ export function ContactForm({
               value={company}
               onChange={(e) => setCompany(e.target.value)}
               placeholder={t('companyPlaceholder')}
+              className="bg-muted border-border text-foreground placeholder:text-muted-foreground"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="cf-birth-date" className="text-muted-foreground">
+              {t('birthDateLabel')}
+            </Label>
+            <Input
+              id="cf-birth-date"
+              type="date"
+              value={birthDate}
+              onChange={(e) => setBirthDate(e.target.value)}
+              max={new Date().toISOString().slice(0, 10)}
+              className="bg-muted border-border text-foreground"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="cf-procedure" className="text-muted-foreground">
+              {t('procedureDetailsLabel')}
+            </Label>
+            <Input
+              id="cf-procedure"
+              value={procedureDetails}
+              onChange={(e) => setProcedureDetails(e.target.value)}
+              placeholder={t('procedureDetailsPlaceholder')}
               className="bg-muted border-border text-foreground placeholder:text-muted-foreground"
             />
           </div>

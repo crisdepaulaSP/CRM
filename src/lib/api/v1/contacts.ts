@@ -23,6 +23,8 @@ export interface ApiContact {
   name: string | null;
   email: string | null;
   company: string | null;
+  birth_date: string | null;
+  procedure_details: string | null;
   avatar_url: string | null;
   tags: { id: string; name: string; color: string }[];
   created_at: string;
@@ -50,6 +52,8 @@ export function serializeContact(row: Record<string, unknown>): ApiContact {
     name: (row.name as string | null) ?? null,
     email: (row.email as string | null) ?? null,
     company: (row.company as string | null) ?? null,
+    birth_date: (row.birth_date as string | null) ?? null,
+    procedure_details: (row.procedure_details as string | null) ?? null,
     avatar_url: (row.avatar_url as string | null) ?? null,
     tags: joins
       .map((j) => j.tags)
@@ -99,6 +103,8 @@ export interface ContactInput {
   name?: string | null;
   email?: string | null;
   company?: string | null;
+  birth_date?: string | null;
+  procedure_details?: string | null;
 }
 
 /**
@@ -133,6 +139,8 @@ export async function findOrCreateContact(
       name: input.name ?? sanitized,
       email: input.email ?? null,
       company: input.company ?? null,
+      birth_date: input.birth_date ?? null,
+      procedure_details: input.procedure_details ?? null,
     })
     .select('id')
     .single();
